@@ -9,7 +9,7 @@ const app = new Elysia()
 
 .get("/", () => "Hola")
 
-.listen(3000);
+.listen(8080);
 
 console.log(
   `💀 server is running at ${app.server?.hostname}: ${app.server?.port} 📡`
