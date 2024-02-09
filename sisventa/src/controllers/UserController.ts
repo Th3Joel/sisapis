@@ -1,5 +1,4 @@
-import { afterEach } from "bun:test";
-import { makePasswd } from "../helpers/Passwd";
+import { comparePasswd, makePasswd } from "../helpers/Passwd";
 
 export const getUsers = ({ db }: any) => {
   return db.user.findMany();
@@ -135,3 +134,48 @@ export const deleteUser = async ({ db, store, params }: any) => {
       msj: "Usuario eliminado correctamente",
     };
 };
+
+export const updatePasswd = async ({ db, store, body, set }: any) => {
+  const { old, confirm, passwd } = body;
+
+  let err: any = { error: [] };
+
+  const user = await db.user.findUnique({ where: { id: store.user.id } });
+
+  if (!(await comparePasswd(old, user.password))) {
+    err.error.push({
+      input: "old",
+      msj: "Contraseña incorrecta",
+    });
+  }
+
+  if (passwd !== confirm) {
+    err.error.push({
+      input: "confirm",
+      msj: "Las contraseñas no coinciden",
+    });
+  }
+
+  if (err.error.length !== 0) {
+    return err;
+  }
+
+  const up = await db.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      password: await makePasswd(passwd),
+    },
+  });
+
+  if (up) {
+    return {
+      status: true,
+      msj: "Contraseña actualizada correctamente",
+    };
+  } else {
+    set.status = 500;
+  }
+};
+

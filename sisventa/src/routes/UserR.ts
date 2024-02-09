@@ -6,8 +6,10 @@ import {
   getProfile,
   updateUser,
   deleteUser,
+  updatePasswd,
+  requestPasswd,
 } from "../controllers/UserController";
-import { CreateSchema } from "../validations/UserSchema";
+import { CreateSchema, UpdatePassSchema } from "../validations/UserSchema";
 import Validation from "../middlewares/Validation";
 
 //Para crear un grupo de rutas
@@ -36,6 +38,10 @@ const route = new Elysia({ prefix: "/user" }).guard(
             .patch("", updateUser)
             .patch("/:id", updateUser)
       )
+      .post("/update_passwd",updatePasswd,{
+        beforeHandle:(x:Handler) => Validation(x,UpdatePassSchema)
+      })
+
       .delete("/:id", deleteUser)
 );
 

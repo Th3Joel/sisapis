@@ -1,27 +1,27 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
-
-export const makeToken = (data:object) =>{
-    const token = jwt.sign(
-        data,
-        process.env.TOKEN_KEY as string,
-        {
-          expiresIn: "20d"
-        }
-      );
-      return token;
+interface TokenData{
+    id:string
 }
+//De ultimo se pone string para que retorne un string -> expiresIn:string):string
+export const makeToken = (data: TokenData,expiresIn:string):string => {
+  const token = jwt.sign(data, process.env.TOKEN_KEY as string, {
+    expiresIn
+  });
+  return token;
+};
 
-
-
-export const verifyToken = (tok:string,store:any) =>{
-    try {
-        const decode:any = jwt.verify(tok,process.env.TOKEN_KEY as string);
-        //Almacenar el id del usuario en la respuesta
-        store.user = {
-            id:decode.id
-        }
-    } catch (error:any) {
-        return error.message
-    }
-}
+export const verifyToken = async (token: string, db: any) => {
+  try {
+    const f = await db.token.findFirst({
+      where: {
+        token
+      },
+    });
+    if (!f) return false;
+    return jwt.verify(token, process.env.TOKEN_KEY as string);
+  } catch (error: any) {
+    console.log(error);
+    return false;
+  }
+};

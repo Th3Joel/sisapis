@@ -9,3 +9,10 @@ import { z } from "zod";
   }),
 });
 
+export const UpdatePassSchema = z.object({
+  body:z.object({
+    old:z.string(),
+    confirm:z.string().min(4),
+    passwd:z.string().min(4)
+  })
+});
