@@ -6,6 +6,8 @@
   },
   "dependencies": {
     "@elysiajs/cors": "^0.8.0",
+    "@types/cors": "^2.8.17",
+    "cors": "^2.8.5",
     "elysia": "latest"
   },
   "devDependencies": {
