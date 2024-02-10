@@ -1,5 +1,5 @@
-import { comparePasswd } from "../helpers/Passwd";
-import { makeToken } from "../helpers/Token";
+import { comparePasswd, makePasswd } from "../helpers/Passwd";
+import { makeToken, verifyToken } from "../helpers/Token";
 import { Resend } from "resend";
 
 interface LoginInput {
@@ -109,7 +109,7 @@ export const requestPasswd = async ({ body, db,headers }: any) => {
 
 const resend = new Resend("re_gJ9U29Ve_K3dA7LXQGLQgytPZhfcgc61X");
 const {data,error} = await resend.emails.send({
-  from:"joel@triceratox.lat",
+  from:"Triceratox <auth@triceratox.lat>",
   to:user.email,
   subject:"Reestablece tu contraseña",
   html:`<a href="${url}">${url}</a>`
@@ -130,6 +130,32 @@ if(error){
 };
 
 
-export const verify = ({query}:any) =>{
-return query.auth;
+export const verify = async({query,body,db}:any) =>{
+
+  const user:any = await verifyToken(query.auth,null,false);
+  if(!user){
+    return{
+      status:"false",
+      code:404
+    };
+  }
+if(body.confirm !== body.passwd){
+  return{
+    status:false,
+    msj:"Las contraseñas no coinciden"
+  }
+}
+
+const updated = await db.user.update({
+  where:{
+    id:user.id
+  },data:{
+    password:await makePasswd(body.passwd)
+  }
+});
+
+return {
+  status:true,
+  msj:"Contraseña actualizada correctamente"
+};
 }

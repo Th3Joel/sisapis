@@ -142,7 +142,7 @@ export const updatePasswd = async ({ db, store, body, set }: any) => {
 
   const user = await db.user.findUnique({ where: { id: store.user.id } });
 
-  if (!(await comparePasswd(old, user.password))) {
+  if ((await comparePasswd(old, user.password))) {
     err.error.push({
       input: "old",
       msj: "Contraseña incorrecta",

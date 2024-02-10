@@ -11,7 +11,7 @@ const route = new Elysia({ prefix: "/auth" })
   })
 
   .post("/reset", requestPasswd)
-  .get("/verify",verify)
+  .post("/verify",verify)
   .get("/logout", Logout, {
     beforeHandle: Auth,
   });

@@ -13,7 +13,7 @@ interface AuthInput{
 const Auth = async(input:AuthInput) => {
     const {cookie:{_secure},store,db} = input;
     
-  const t:any = await verifyToken(_secure.value,db);
+  const t:any = await verifyToken(_secure.value,db,true);
   if(!t){
     return "No autorizado";
   }

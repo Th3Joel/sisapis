@@ -6,8 +6,7 @@ import {
   getProfile,
   updateUser,
   deleteUser,
-  updatePasswd,
-  requestPasswd,
+  updatePasswd
 } from "../controllers/UserController";
 import { CreateSchema, UpdatePassSchema } from "../validations/UserSchema";
 import Validation from "../middlewares/Validation";
@@ -43,6 +42,6 @@ const route = new Elysia({ prefix: "/user" }).guard(
       })
 
       .delete("/:id", deleteUser)
-);
+)
 
 export default route; 
