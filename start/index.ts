@@ -1,9 +1,11 @@
 import { Elysia } from "elysia";
 
-import sisventa from "../sisventa/src/index"
+import sisventa from "../sisventa/src/index";
+
+import {cors} from "@elysiajs/cors";
 
 const app = new Elysia()
-
+.use(cors())
 
 .use(sisventa)
 
