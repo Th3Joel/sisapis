@@ -1,3 +1,4 @@
+import { Cookie } from "elysia";
 import { comparePasswd, makePasswd } from "../helpers/Passwd";
 import { makeToken, verifyToken } from "../helpers/Token";
 import { Resend } from "resend";
@@ -22,11 +23,10 @@ export const Login = async (input: LoginInput) => {
     cookie: { _secure },
     headers
   } = input;
-
-  
   const tokenRecord = await db.token.findFirst({
-    where: { token: _secure.value },
+    where: { token: _secure.value ?? '' },
   });
+ 
   if (tokenRecord) {
     return {
       status: false,
@@ -67,7 +67,7 @@ export const Login = async (input: LoginInput) => {
   if (!tokenSaved) return "error";
   _secure.value = t;
   _secure.httpOnly = true;
-  _secure.domain = headers.host;
+  _secure.domain = headers.host.split(':')[0];
   _secure.path = "/";
 
 
@@ -86,7 +86,7 @@ export const Logout = async ({ cookie: { _secure }, db ,headers}: any) => {
     },
   });
   _secure.remove();
-  _secure.domain = headers.host;
+  _secure.domain = headers.host.split(':')[0];
   _secure.path = "/";
   _secure.httpOnly = true;
   return {
