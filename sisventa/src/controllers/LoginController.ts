@@ -69,7 +69,7 @@ export const Login = async (input: LoginInput) => {
 
   return {
     user,
-    t,
+    token:t,
   };
 };
 

@@ -6,8 +6,8 @@ import {cors} from '@elysiajs/cors'
 import db from "./config/Database";
 
 const app = new Elysia({prefix:'/sisventa'})
-.use(cors)
 
+.use(cors)
 .use(db)
 .use(AuhtR)
 .use(UserR)

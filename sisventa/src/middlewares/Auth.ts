@@ -1,4 +1,3 @@
-import { string } from "zod";
 import { verifyToken } from "../helpers/Token";
 
 interface AuthInput{
