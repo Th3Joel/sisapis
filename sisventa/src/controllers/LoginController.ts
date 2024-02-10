@@ -11,15 +11,19 @@ interface LoginInput {
   cookie: {
     _secure: any;
   };
+  headers:{
+    host:string
+  };
 }
 export const Login = async (input: LoginInput) => {
   const {
     db,
     body,
     cookie: { _secure },
+    headers
   } = input;
 
-
+  
   const tokenRecord = await db.token.findFirst({
     where: { token: _secure.value },
   });
@@ -63,7 +67,7 @@ export const Login = async (input: LoginInput) => {
   if (!tokenSaved) return "error";
   _secure.value = t;
   _secure.httpOnly = true;
-  _secure.domain = "localhost";
+  _secure.domain = headers.host;
   _secure.path = "/";
 
 
@@ -73,7 +77,7 @@ export const Login = async (input: LoginInput) => {
   };
 };
 
-export const Logout = async ({ cookie: { _secure }, db }: any) => {
+export const Logout = async ({ cookie: { _secure }, db ,headers}: any) => {
   await db.token.deleteMany({
     where: {
       token: {
@@ -82,7 +86,7 @@ export const Logout = async ({ cookie: { _secure }, db }: any) => {
     },
   });
   _secure.remove();
-  _secure.domain = "localhost";
+  _secure.domain = headers.host;
   _secure.path = "/";
   _secure.httpOnly = true;
   return {
