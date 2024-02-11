@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     git \
     zip \
     unzip \
+    nodejs \
     wget \
     libpng-dev \
     libjpeg-dev \
