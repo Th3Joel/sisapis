@@ -3,11 +3,11 @@ FROM debian:latest
 
 # Actualiza el índice de paquetes e instala las dependencias necesarias
 RUN apt-get update && apt-get install -y \
+    nodejs \
     curl \
     git \
     zip \
     unzip \
-    nodejs \
     wget \
     libpng-dev \
     libjpeg-dev \
