@@ -9,7 +9,7 @@ const route = new Elysia({ prefix: "/auth" })
 
   .post("/login", Login,mdd([Validation,LoginSchema]))
 
-  .post("/reset", requestPasswd)
+  .post("/reset", requestPasswd) 
   .post("/verify",verify)
   .get("/logout", Logout, mdd([Auth]));
 
