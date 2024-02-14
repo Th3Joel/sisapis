@@ -1,8 +1,8 @@
 import { Elysia } from "elysia";
-import AuhtR from "./routes/AuthR";
-import UserR from "./routes/UserR";
+import AuhtR from "./routes/authR";
+import UserR from "./routes/userR";
 
-import db from "./config/Database";
+import db from "./config/database";
 
 const app = new Elysia({prefix:'/sisventa'})
 

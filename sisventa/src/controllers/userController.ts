@@ -1,4 +1,4 @@
-import { comparePasswd, makePasswd } from "../helpers/Passwd";
+import { comparePasswd, makePasswd } from "../helpers/passwd";
 
 export const getUsers = ({ db }: any) => {
   return db.user.findMany();
@@ -22,6 +22,7 @@ export const createUser = async ({ db, body }: any) => {
       name: body.name,
       email: body.email,
       password: await makePasswd(body.password),
+      role:body.role
     },
   });
 

@@ -1,6 +1,5 @@
-import { Cookie } from "elysia";
-import { comparePasswd, makePasswd } from "../helpers/Passwd";
-import { makeToken, verifyToken } from "../helpers/Token";
+import { comparePasswd, makePasswd } from "../helpers/passwd";
+import { makeToken, verifyToken } from "../helpers/token";
 import { Resend } from "resend";
 
 interface LoginInput {
@@ -9,22 +8,20 @@ interface LoginInput {
     password: string;
   };
   db: any;
-  cookie: {
-    _secure: any;
-  };
+  
   headers:{
-    host:string
+    key:string
   };
 }
 export const Login = async (input: LoginInput) => {
   const {
     db,
     body,
-    cookie: { _secure },
     headers
   } = input;
+
   const tokenRecord = await db.token.findFirst({
-    where: { token: _secure.value ?? '' },
+    where: { token: headers.key ?? '' },
   });
  
   if (tokenRecord) {
@@ -42,6 +39,7 @@ export const Login = async (input: LoginInput) => {
       id: true,
       name: true,
       email: true,
+      role:true,
       password: true,
     },
   });
@@ -54,41 +52,41 @@ export const Login = async (input: LoginInput) => {
 
   delete user.password;
 
-  //Crear una cookie en la session
-  const t = makeToken({ id: user.id }, "2d");
+  //Crear el token y enviarselo guradarlo a la db
+  const token = makeToken({ id: user.id,role:user.role }, "2d");
 
   const tokenSaved = await db.token.create({
     data: {
       userId: user.id,
-      token: t,
+      token
     },
   });
 
   if (!tokenSaved) return "error";
-  _secure.value = t;
+  /*_secure.value = t;
   _secure.httpOnly = true;
   _secure.domain = headers.host.split(':')[0];
-  _secure.path = "/";
+  _secure.path = "/";*/
 
 
   return {
-    user,
-    token:t,
+    ...user,
+    token
   };
 };
 
-export const Logout = async ({ cookie: { _secure }, db ,headers}: any) => {
+export const Logout = async ({ db ,headers}: any) => {
   await db.token.deleteMany({
     where: {
       token: {
-        contains: _secure.value,
+        contains: headers.key,
       },
     },
   });
-  _secure.remove();
+  /*_secure.remove();
   _secure.domain = headers.host.split(':')[0];
   _secure.path = "/";
-  _secure.httpOnly = true;
+  _secure.httpOnly = true;*/
   return {
     status: "true",
     msj: "Session cerrada",
@@ -108,7 +106,7 @@ export const requestPasswd = async ({ body, db,headers }: any) => {
       msj:"Este email no existe"
     }
   }
-  const tok = makeToken({id:user.id},"10m");
+  const tok = makeToken({id:user.id,role:"nothing"},"10m");
   const url = headers.host+"/sisventa/auth/verify?auth="+tok;
 
 const resend = new Resend("re_gJ9U29Ve_K3dA7LXQGLQgytPZhfcgc61X");

@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 
 interface TokenData {
   id: string;
+  role:string;
 }
 //De ultimo se pone string para que retorne un string -> expiresIn:string):string
 export const makeToken = (data: TokenData, expiresIn: string): string => {
