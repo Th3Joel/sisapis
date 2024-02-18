@@ -43,6 +43,15 @@ model Post {
   author User? @relation(fields: [authorId], references: [id])
 }
 
+model Cliente {
+  id String @id @default(uuid())
+  nombre String
+  apellido String
+  celular String?
+  correo String?
+  direccion String?
+}
+
 enum Role {
   admin
   vendedor

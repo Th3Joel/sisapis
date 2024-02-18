@@ -16,7 +16,7 @@ model User {
   email String @unique
   name String
   password String
-  role Role @default(user)
+  role Role @default(vendedor)
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
   posts Post[]
@@ -43,7 +43,17 @@ model Post {
   author User? @relation(fields: [authorId], references: [id])
 }
 
+model Cliente {
+  id String @id @default(uuid())
+  nombre String
+  apellido String
+  celular String?
+  correo String?
+  direccion String?
+}
+
 enum Role {
   admin
-  user
+  vendedor
+  bodega
 }

@@ -134,6 +134,15 @@ exports.Prisma.PostScalarFieldEnum = {
   authorId: 'authorId'
 };
 
+exports.Prisma.ClienteScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  apellido: 'apellido',
+  celular: 'celular',
+  correo: 'correo',
+  direccion: 'direccion'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -145,13 +154,15 @@ exports.Prisma.NullsOrder = {
 };
 exports.Role = exports.$Enums.Role = {
   admin: 'admin',
-  user: 'user'
+  vendedor: 'vendedor',
+  bodega: 'bodega'
 };
 
 exports.Prisma.ModelName = {
   User: 'User',
   Token: 'Token',
-  Post: 'Post'
+  Post: 'Post',
+  Cliente: 'Cliente'
 };
 
 /**
