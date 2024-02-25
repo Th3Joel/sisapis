@@ -2,7 +2,7 @@
   "name": "start",
   "version": "1.0.50",
   "scripts": {
-    "dev": "bun run --watch index.ts"
+    "dev": "bun --watch index.ts"
   },
   "dependencies": {
     "@elysiajs/cors": "^0.8.0",

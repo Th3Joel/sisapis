@@ -8,7 +8,7 @@ import { cors } from "@elysiajs/cors";
 const app = new Elysia()
   .use(
     cors({
-      origin:true
+      methods:["GET","DELETE","PUT","POST"]
     })
   )
 
