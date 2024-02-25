@@ -1,8 +1,8 @@
-import {z} from 'zod';
+import * as yup from "yup"
 
-export const LoginSchema = z.object({
+export const LoginSchema =()=> yup.object({
     
-        email:z.string().email(),
-        password:z.string().min(4)
+        email:yup.string().email("Correo inválido"),
+        password:yup.string().min(4,"Debe ser mayor a 4 caracteres")
    
 });

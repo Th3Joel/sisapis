@@ -11,7 +11,7 @@ import Validation from "../middlewares/validation";
 import { ClienteSchema } from "../validations/clienteSchema";
 import m from "../helpers/parseMiddle";
 
-const ClienteR = new Elysia({ prefix: "/cliente" }).guard(
+const ClienteR = new Elysia({ prefix: "/clientes" }).guard(
   {
     beforeHandle: Auth,
   },
@@ -20,7 +20,7 @@ const ClienteR = new Elysia({ prefix: "/cliente" }).guard(
       .get("/all", all)
       .get("/:id", find)
       .group("", m([Validation, ClienteSchema]), (app) =>
-        app.post("/", save).patch("/:id", update)
+        app.post("/", save).put("/:id", update)
       )
       .delete("/:id", remove)
 );

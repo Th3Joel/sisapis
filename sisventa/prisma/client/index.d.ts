@@ -4157,7 +4157,7 @@ export namespace Prisma {
   export type ClienteGroupByOutputType = {
     id: string
     nombre: string
-    apellido: string
+    apellido: string | null
     celular: string | null
     correo: string | null
     direccion: string | null
@@ -4205,7 +4205,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       nombre: string
-      apellido: string
+      apellido: string | null
       celular: string | null
       correo: string | null
       direccion: string | null
@@ -5206,7 +5206,7 @@ export namespace Prisma {
     NOT?: ClienteWhereInput | ClienteWhereInput[]
     id?: StringFilter<"Cliente"> | string
     nombre?: StringFilter<"Cliente"> | string
-    apellido?: StringFilter<"Cliente"> | string
+    apellido?: StringNullableFilter<"Cliente"> | string | null
     celular?: StringNullableFilter<"Cliente"> | string | null
     correo?: StringNullableFilter<"Cliente"> | string | null
     direccion?: StringNullableFilter<"Cliente"> | string | null
@@ -5215,7 +5215,7 @@ export namespace Prisma {
   export type ClienteOrderByWithRelationInput = {
     id?: SortOrder
     nombre?: SortOrder
-    apellido?: SortOrder
+    apellido?: SortOrderInput | SortOrder
     celular?: SortOrderInput | SortOrder
     correo?: SortOrderInput | SortOrder
     direccion?: SortOrderInput | SortOrder
@@ -5227,7 +5227,7 @@ export namespace Prisma {
     OR?: ClienteWhereInput[]
     NOT?: ClienteWhereInput | ClienteWhereInput[]
     nombre?: StringFilter<"Cliente"> | string
-    apellido?: StringFilter<"Cliente"> | string
+    apellido?: StringNullableFilter<"Cliente"> | string | null
     celular?: StringNullableFilter<"Cliente"> | string | null
     correo?: StringNullableFilter<"Cliente"> | string | null
     direccion?: StringNullableFilter<"Cliente"> | string | null
@@ -5236,7 +5236,7 @@ export namespace Prisma {
   export type ClienteOrderByWithAggregationInput = {
     id?: SortOrder
     nombre?: SortOrder
-    apellido?: SortOrder
+    apellido?: SortOrderInput | SortOrder
     celular?: SortOrderInput | SortOrder
     correo?: SortOrderInput | SortOrder
     direccion?: SortOrderInput | SortOrder
@@ -5251,7 +5251,7 @@ export namespace Prisma {
     NOT?: ClienteScalarWhereWithAggregatesInput | ClienteScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Cliente"> | string
     nombre?: StringWithAggregatesFilter<"Cliente"> | string
-    apellido?: StringWithAggregatesFilter<"Cliente"> | string
+    apellido?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     celular?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     correo?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     direccion?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
@@ -5455,7 +5455,7 @@ export namespace Prisma {
   export type ClienteCreateInput = {
     id?: string
     nombre: string
-    apellido: string
+    apellido?: string | null
     celular?: string | null
     correo?: string | null
     direccion?: string | null
@@ -5464,7 +5464,7 @@ export namespace Prisma {
   export type ClienteUncheckedCreateInput = {
     id?: string
     nombre: string
-    apellido: string
+    apellido?: string | null
     celular?: string | null
     correo?: string | null
     direccion?: string | null
@@ -5473,7 +5473,7 @@ export namespace Prisma {
   export type ClienteUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
-    apellido?: StringFieldUpdateOperationsInput | string
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
     celular?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -5482,7 +5482,7 @@ export namespace Prisma {
   export type ClienteUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
-    apellido?: StringFieldUpdateOperationsInput | string
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
     celular?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -5491,7 +5491,7 @@ export namespace Prisma {
   export type ClienteCreateManyInput = {
     id?: string
     nombre: string
-    apellido: string
+    apellido?: string | null
     celular?: string | null
     correo?: string | null
     direccion?: string | null
@@ -5500,7 +5500,7 @@ export namespace Prisma {
   export type ClienteUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
-    apellido?: StringFieldUpdateOperationsInput | string
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
     celular?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -5509,7 +5509,7 @@ export namespace Prisma {
   export type ClienteUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
-    apellido?: StringFieldUpdateOperationsInput | string
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
     celular?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null

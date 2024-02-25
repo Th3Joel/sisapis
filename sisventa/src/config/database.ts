@@ -2,14 +2,14 @@ import { PrismaClient } from "../../prisma/client";
 
 import { Elysia } from "elysia";
 
-const prisma = new PrismaClient({
+export const prisma = new PrismaClient({
   log: ["error", "info", "warn"],
 });
 
 
 
 
-prisma.$connect();
+prisma.$connect().then(()=>console.log("Conectado a la base de datos"));
 
 
 export default new Elysia().decorate("db",prisma);

@@ -12,7 +12,10 @@ const Auth = async(input:any) => {
     
   const t:any = await verifyToken(headers.key,db,true);
   if(!t){
-    return "No autorizado";
+    return {
+      status:false,
+      msj:"No autorizado"
+    }
   }
   if(t.id){
     store.user = {id:t.id,role:t.role}

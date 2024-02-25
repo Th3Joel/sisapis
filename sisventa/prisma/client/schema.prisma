@@ -46,7 +46,7 @@ model Post {
 model Cliente {
   id String @id @default(uuid())
   nombre String
-  apellido String
+  apellido String?
   celular String?
   correo String?
   direccion String?

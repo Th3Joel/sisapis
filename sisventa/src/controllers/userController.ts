@@ -1,74 +1,68 @@
 import { comparePasswd, makePasswd } from "../helpers/passwd";
+interface IUsers{
+  query:{
+    page: string;
+    pageSize: string;
+    search: string | undefined;
+  }
+  db:any;
+  store:{
+    user:{
+      id:string
+    }
+  }
+}
+export const all = async({ db,query:{page,pageSize,search},store }: IUsers) => {
+  let where:any = {
+    NOT:{
+      id:{
+        equals:store.user.id
+      }
+    },
+    OR:undefined
+  }
+  if(search){
+    where.OR= [
+        {
+          name:{
+            contains:search
+          }
+        },
+        {
+          email:{
+            contains:search
+          }
+        }
+      ]
+    
+  }
+  const users = await db.user.findMany({
+    skip:(parseInt(page) - 1) * parseInt(pageSize),
+    take:parseInt(pageSize),
+    where,
+    select:{
+      id:true,
+      name:true,
+      email:true,
+      role:true
+    }
+  });
 
-export const getUsers = ({ db }: any) => {
-  return db.user.findMany();
+  const count = parseInt(await db.user.count({where}))
+  return {
+    status:true,
+    all:{
+      data:users,
+      count,
+      pages: Math.ceil(count / parseInt(pageSize)),
+      page: parseInt(page),
+      pageSize: parseInt(pageSize),
+    }
+  }
 };
 
 export const createUser = async ({ db, body }: any) => {
-  const existEmail = await db.user.findUnique({
-    where: {
-      email: body.email,
-    },
-  });
-
-  if (existEmail)
-    return {
-      status: false,
-      msj: "Este email ya existe",
-    };
-
   const user = await db.user.create({
-    data: {
-      name: body.name,
-      email: body.email,
-      password: await makePasswd(body.password),
-      role:body.role
-    },
-  });
-
-  return {
-    msj: "Creado correctamente",
-    user,
-  };
-};
-
-export const updateUser = async ({ db, body, params, store }: any) => {
-  const id = params !== undefined ? params.id : store.user.id;
-
-  const exist = await db.user.findUnique({
-    where: {
-      id,
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  if (!exist)
-    return {
-      status: false,
-      msj: "El usuario no existe",
-    };
-
-  const existEmail = await db.user.findUnique({
-    where: {
-      email: body.email,
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  if (existEmail && existEmail.id !== id)
-    return {
-      status: false,
-      msj: "Este email ya existe",
-    };
-
-  const updateUser = await db.user.update({
-    where: {
-      id,
-    },
     data: {
       name: body.name,
       email: body.email,
@@ -78,10 +72,40 @@ export const updateUser = async ({ db, body, params, store }: any) => {
   });
 
   return {
-    status: true,
-    msj: "Usuario actualizado correctamente",
-    user: updateUser,
+    status:true,
+    msj: "Usuario creado correctamente",
+    user,
   };
+};
+
+export const updateUser = async ({ db, body, params, store }: any) => {
+  const id = params?.id ? params.id : store.user.id;
+
+  try {
+    const updateUser = await db.user.update({
+      where: {
+        id,
+      },
+      data: {
+        name: body.name,
+        email: body.email,
+        password: await makePasswd(body.password),
+        role: body.role,
+      },
+    });
+
+    return {
+      status: true,
+      msj: "Usuario actualizado correctamente",
+      user: updateUser,
+    };
+  } catch (error: any) {
+    if (error.code === "P2025")
+      return {
+        status: false,
+        msj: "Usuario no encontrado",
+      };
+  }
 };
 
 export const getProfile = async ({ db, store, params }: any) => {
@@ -99,41 +123,40 @@ export const getProfile = async ({ db, store, params }: any) => {
     };
   }
   delete user.password;
-  return user;
+  return {
+    status: true,
+    find:user,
+  };
 };
 
 export const deleteUser = async ({ db, store, params }: any) => {
+  
   const id = params.id;
 
   if (id === store.user.id)
     return {
       status: false,
-      msj: "No puedes eliminar tu usuario",
+      msj: "No puedes eliminar tu cuenta",
     };
+  try {
+    const delUser = await db.user.delete({
+      where: {
+        id,
+      },
+    });
 
-  const user = await db.user.findUnique({
-    where: {
-      id,
-    },
-  });
-  if (!user) {
-    return {
-      status: false,
-      msj: "Usuario no encontrado",
-    };
+    if (delUser)
+      return {
+        status: true,
+        msj: "Usuario eliminado correctamente",
+      };
+  } catch (error: any) {
+    if (error.code === "P2025")
+      return {
+        status: false,
+        msj: "Usuario no encontrado",
+      };
   }
-
-  const delUser = await db.user.delete({
-    where: {
-      id,
-    },
-  });
-
-  if (delUser)
-    return {
-      status: true,
-      msj: "Usuario eliminado correctamente",
-    };
 };
 
 export const updatePasswd = async ({ db, store, body, set }: any) => {
@@ -143,7 +166,7 @@ export const updatePasswd = async ({ db, store, body, set }: any) => {
 
   const user = await db.user.findUnique({ where: { id: store.user.id } });
 
-  if ((await comparePasswd(old, user.password))) {
+  if (await comparePasswd(old, user.password)) {
     err.error.push({
       input: "old",
       msj: "Contraseña incorrecta",
@@ -179,4 +202,3 @@ export const updatePasswd = async ({ db, store, body, set }: any) => {
     set.status = 500;
   }
 };
-

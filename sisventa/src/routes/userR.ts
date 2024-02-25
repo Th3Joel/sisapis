@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 import Auth from "../middlewares/auth";
 import {
   createUser,
-  getUsers,
+  all,
   getProfile,
   updateUser,
   deleteUser,
@@ -15,7 +15,7 @@ import Role from "../middlewares/role";
 import mdd from "../helpers/parseMiddle";
 
 //Para crear un grupo de rutas
-const UserR = new Elysia({ prefix: "/user" }).guard(
+const UserR = new Elysia({ prefix: "/users" }).guard(
   {
     //Midleware
     beforeHandle: Auth,
@@ -23,9 +23,9 @@ const UserR = new Elysia({ prefix: "/user" }).guard(
   (app) =>
     app
 
-      .get("/all", getUsers, mdd([Role]))
+      .get("/all", all, mdd([Role]))
 
-      .group("/profile", mdd([Role, "user"]), (app) =>
+      .group("/profile", (app) =>
         app
           .get("", getProfile, mdd([Role, "user"]))
           .get("/:id", getProfile, mdd([Role]))
@@ -34,8 +34,8 @@ const UserR = new Elysia({ prefix: "/user" }).guard(
       .group("", mdd([Validation, CreateSchema]), (app) =>
         app
           .post("", createUser, mdd([Role]))
-          .patch("", updateUser, mdd([Role, "user"]))
-          .patch("/:id", updateUser, mdd([Role]))
+          .put("", updateUser, mdd([Role, "user"]))
+          .put("/:id", updateUser, mdd([Role]))
       )
 
       .post("/update_passwd", updatePasswd, mdd([Validation, UpdatePassSchema]))

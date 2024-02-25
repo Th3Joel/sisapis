@@ -15,3 +15,4 @@ const Role = ({store:{user}}:IRole,role:string[]) => {
       }
     }
 export default Role;
+ 
