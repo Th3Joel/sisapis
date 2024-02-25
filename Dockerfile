@@ -5,18 +5,6 @@ FROM debian:latest
 RUN apt-get update && apt-get install -y \
     nodejs \
     curl \
-    git \
-    zip \
-    unzip \
-    wget \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    libonig-dev \
-    libxml2-dev \
-    libpq-dev \
-    #mariadb-server \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
