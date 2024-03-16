@@ -2,7 +2,8 @@
   "name": "start",
   "version": "1.0.50",
   "scripts": {
-    "dev": "bun --watch index.ts"
+    "dev": "bun --watch index.ts",
+    "compilar":"esbuild index.ts --bundle --outfile=sistemas.js --platform=node --minify "
   },
   "dependencies": {
     "@elysiajs/cors": "^0.8.0",

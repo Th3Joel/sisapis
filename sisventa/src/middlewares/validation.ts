@@ -11,6 +11,7 @@ const Validation = async (app: any, schema: any) => {
     : method === "PUT"
     ? app.store.user.id
     : undefined;
+
   try {
     //paso id para validacion opcional
     await schema[0](id).validate(app.body, { abortEarly: false });

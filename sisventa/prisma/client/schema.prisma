@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output = "./client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  name String
+  password String
+  role Role @default(vendedor)
+  picture String
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  posts Post[]
+  token Token[]
+}
+
+model Token {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId],references: [id])
+  ip String? @db.VarChar(15)
+  token String @db.Text
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean @default(false)
+  title String @db.VarChar(255)
+  authorId String?
+  //Relacion
+  author User? @relation(fields: [authorId], references: [id])
+}
+
+model Cliente {
+  id String @id @default(uuid())
+  nombre String
+  apellido String?
+  celular String?
+  correo String?
+  direccion String?
+}
+
+enum Role {
+  admin
+  vendedor
+  bodega
+}

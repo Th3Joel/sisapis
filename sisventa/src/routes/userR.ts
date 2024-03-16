@@ -7,6 +7,7 @@ import {
   updateUser,
   deleteUser,
   updatePasswd,
+  picture,
 } from "../controllers/userController";
 import { CreateSchema, UpdatePassSchema } from "../validations/userSchema";
 import Validation from "../middlewares/validation";
@@ -22,12 +23,12 @@ const UserR = new Elysia({ prefix: "/users" }).guard(
   },
   (app) =>
     app
-
+    .get("/picture/:name",picture)
       .get("/all", all, mdd([Role]))
 
       .group("/profile", (app) =>
         app
-          .get("", getProfile, mdd([Role, "user"]))
+          .get("", getProfile, mdd([Role, "bodega"]))
           .get("/:id", getProfile, mdd([Role]))
       )
 
@@ -37,10 +38,13 @@ const UserR = new Elysia({ prefix: "/users" }).guard(
           .put("", updateUser, mdd([Role, "user"]))
           .put("/:id", updateUser, mdd([Role]))
       )
-
+      .post("/upload",({body}:{body:{file:File}})=>{
+        console.log(body)
+      })
       .post("/update_passwd", updatePasswd, mdd([Validation, UpdatePassSchema]))
 
       .delete("/:id", deleteUser, mdd([Role]))
-);
+)
+
 
 export default UserR;

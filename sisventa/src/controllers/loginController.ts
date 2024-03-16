@@ -8,22 +8,28 @@ interface LoginInput {
     password: string;
   };
   db: any;
-  
-  headers:{
-    key:string
+
+  headers: {
+    key: string;
+    host: string;
+  };
+
+  cookie: {
+    _secure: any;
   };
 }
 export const Login = async (input: LoginInput) => {
   const {
     db,
     body,
-    headers
+    headers,
+    cookie: { _secure },
   } = input;
 
+
   const tokenRecord = await db.token.findFirst({
-    where: { token: headers.key ?? '' },
+    where: { token: _secure.value ?? "" },
   });
- 
   if (tokenRecord) {
     return {
       status: false,
@@ -39,7 +45,7 @@ export const Login = async (input: LoginInput) => {
       id: true,
       name: true,
       email: true,
-      role:true,
+      role: true,
       password: true,
     },
   });
@@ -53,111 +59,108 @@ export const Login = async (input: LoginInput) => {
   delete user.password;
 
   //Crear el token y enviarselo guradarlo a la db
-  const token = makeToken({ id: user.id,role:user.role }, "2d");
+  const token = makeToken({ id: user.id, role: user.role }, "2d");
 
   const tokenSaved = await db.token.create({
     data: {
       userId: user.id,
-      token
+      token,
     },
   });
 
   if (!tokenSaved) return "error";
-  /*_secure.value = t;
-  _secure.httpOnly = true;
-  _secure.domain = headers.host.split(':')[0];
-  _secure.path = "/";*/
 
+  _secure.value = token;
+  _secure.httpOnly = true;
+  _secure.domain = headers.host.split(":")[0];
+  _secure.path = "/";
 
   return {
-    ...user,
-    token
+    status:true,
+    token,
   };
 };
 
-export const Logout = async ({ db ,headers}: any) => {
+export const Logout = async ({ db, headers,cookie:{_secure} }: LoginInput) => {
   await db.token.deleteMany({
     where: {
       token: {
-        contains: headers.key,
+        contains: _secure.value,
       },
     },
   });
-  /*_secure.remove();
+  _secure.remove();
   _secure.domain = headers.host.split(':')[0];
   _secure.path = "/";
-  _secure.httpOnly = true;*/
+  _secure.httpOnly = true;
   return {
     status: "true",
     msj: "Session cerrada",
   };
 };
 
-
-export const requestPasswd = async ({ body, db,headers }: any) => {
+export const requestPasswd = async ({ body, db, headers }: any) => {
   const user = await db.user.findFirst({
     where: {
       email: body.email,
     },
   });
-  if(!user){
-    return{
-      status:false,
-      msj:"Este email no existe"
-    }
+  if (!user) {
+    return {
+      status: false,
+      msj: "Este email no existe",
+    };
   }
-  const tok = makeToken({id:user.id,role:"nothing"},"10m");
-  const url = headers.host+"/sisventa/auth/verify?auth="+tok;
+  const tok = makeToken({ id: user.id, role: "nothing" }, "10m");
+  const url = headers.host + "/sisventa/auth/verify?auth=" + tok;
 
-const resend = new Resend("re_gJ9U29Ve_K3dA7LXQGLQgytPZhfcgc61X");
-const {data,error} = await resend.emails.send({
-  from:"Triceratox <auth@triceratox.lat>",
-  to:user.email,
-  subject:"Reestablece tu contraseña",
-  html:`<a href="${url}">${url}</a>`
+  const resend = new Resend(process.env.KEY_RESEND);
+  const { data, error } = await resend.emails.send({
+    from: "Triceratox <auth@triceratox.lat>",
+    to: user.email,
+    subject: "Reestablece tu contraseña",
+    html: `<a href="${url}">${url}</a>`,
+  });
 
-});
-
-if(error){
-  return {
-    status:false,
-    msj:"Ha currido un error"
+  if (error) {
+    return {
+      status: false,
+      msj: "Ha currido un error",
+    };
   }
-}
 
   return {
-    status:true,
-    msj:"Email fue enviado a tu correo"
+    status: true,
+    msj: "Email fue enviado a tu correo",
   };
 };
 
-
-export const verify = async({query,body,db}:any) =>{
-
-  const user:any = await verifyToken(query.auth,null,false);
-  if(!user){
-    return{
-      status:"false",
-      code:404
+export const verify = async ({ query, body, db }: any) => {
+  const user: any = await verifyToken(query.auth, null, false);
+  if (!user) {
+    return {
+      status: "false",
+      code: 404,
     };
   }
-if(body.confirm !== body.passwd){
-  return{
-    status:false,
-    msj:"Las contraseñas no coinciden"
+  if (body.confirm !== body.passwd) {
+    return {
+      status: false,
+      msj: "Las contraseñas no coinciden",
+    };
   }
-}
 
-const updated = await db.user.update({
-  where:{
-    id:user.id
-  },data:{
-    password:await makePasswd(body.passwd)
-  }
-});
+  const updated = await db.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      password: await makePasswd(body.passwd),
+    },
+  });
 
-return {
-  status:true,
-  msj:"Contraseña actualizada correctamente"
+  return {
+    status: true,
+    msj: "Contraseña actualizada correctamente",
+  };
 };
-}

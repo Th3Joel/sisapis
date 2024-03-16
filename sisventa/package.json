@@ -2,12 +2,14 @@
   "name": "sisventa",
   "module": "src/index.ts",
   "type": "module",
+  "scripts": {
+    "prisma":"prisma"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "prisma": "5.9.1"
   },
   "dependencies": {
-    "@prisma/client": "5.9.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.5",
     "bcryptjs": "^2.4.3",

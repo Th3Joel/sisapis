@@ -2,7 +2,7 @@ import * as yup from "yup";
 import { prisma as db } from "../config/database";
 
 export const CreateSchema = (id: string) =>
-  yup.object({
+  yup.object().shape({
     name: yup.string().max(50).required("Campo requerido"),
     email: yup
       .string()
@@ -14,6 +14,17 @@ export const CreateSchema = (id: string) =>
       .string()
       .required("Campo requerido")
       .oneOf(["admin", "vendedor", "bodega"], "Rol inválido"),
+    imgFile: yup
+      .mixed()
+      .test("false","Tipo de imagen invalido ",(value:any)=>{
+        
+        return ["image/png","image/jpeg","image/jpg","image/webp",""].includes(value.type)
+        
+      })
+      .test("false","Imagen supera los 10MB",(value:any)=>{
+        return value.size <= 10 * 1024 * 1024;
+      })
+      
   });
 
 export const UpdatePassSchema = yup.object({

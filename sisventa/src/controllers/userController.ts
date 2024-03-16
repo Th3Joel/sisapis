@@ -1,4 +1,6 @@
+import archivos from "../helpers/Files";
 import { comparePasswd, makePasswd } from "../helpers/passwd";
+
 interface IUsers{
   query:{
     page: string;
@@ -10,6 +12,19 @@ interface IUsers{
     user:{
       id:string
     }
+  }
+  set:any;
+
+  body:{
+    imgFile:File
+    name:string
+    email:string
+    role:string
+    password:string
+  }
+
+  params:{
+    name:string;
   }
 }
 export const all = async({ db,query:{page,pageSize,search},store }: IUsers) => {
@@ -44,7 +59,8 @@ export const all = async({ db,query:{page,pageSize,search},store }: IUsers) => {
       id:true,
       name:true,
       email:true,
-      role:true
+      role:true,
+      picture:true
     }
   });
 
@@ -61,15 +77,28 @@ export const all = async({ db,query:{page,pageSize,search},store }: IUsers) => {
   }
 };
 
-export const createUser = async ({ db, body }: any) => {
+export const createUser = async ({ db, body }: IUsers) => {
+  
+  //Sacar nombre de imagen
+  const ext = body.imgFile.name.split(".")[1];
+  const nameFile = `${body.email}.${ext}`;
+
   const user = await db.user.create({
     data: {
       name: body.name,
       email: body.email,
       password: await makePasswd(body.password),
       role: body.role,
+      picture:nameFile
     },
   });
+
+
+  //Guardar la imagen
+  
+    const file = new archivos("sisventa/uploads/img/profile/");
+    file.save(nameFile,body.imgFile);
+  
 
   return {
     status:true,
@@ -202,3 +231,10 @@ export const updatePasswd = async ({ db, store, body, set }: any) => {
     set.status = 500;
   }
 };
+
+export const picture = ({params:{name},set}:IUsers) => {
+  const file = new archivos("sisventa/uploads/img/profile/");
+
+  set.headers["Content-Type"] ="image/png";
+  return file.get(name).file;
+}
