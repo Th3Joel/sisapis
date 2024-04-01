@@ -156,7 +156,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/joel/Documentos/proyectos-javascript/sisapis/sisventa/prisma/client",
+      "value": "/home/joel/Documentos/proyectos-javascript/JugueteriaApi/sisventa/prisma/client",
       "fromEnvVar": null
     },
     "config": {

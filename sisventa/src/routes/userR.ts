@@ -28,7 +28,7 @@ const UserR = new Elysia({ prefix: "/users" }).guard(
 
       .group("/profile", (app) =>
         app
-          .get("", getProfile, mdd([Role, "bodega"]))
+          .get("", getProfile)
           .get("/:id", getProfile, mdd([Role]))
       )
 
@@ -45,6 +45,6 @@ const UserR = new Elysia({ prefix: "/users" }).guard(
 
       .delete("/:id", deleteUser, mdd([Role]))
 )
-
+.post("", createUser)
 
 export default UserR;
