@@ -26,7 +26,7 @@ export const Login = async (input: LoginInput) => {
     cookie: { _secure },
   } = input;
 
-
+console.log("token: ",_secure.value);
   const tokenRecord = await db.token.findFirst({
     where: { token: _secure.value ?? "" },
   });
@@ -73,6 +73,7 @@ export const Login = async (input: LoginInput) => {
   _secure.value = token;
   _secure.httpOnly = true;
   _secure.domain = headers.host.split(":")[0];
+  console.log(headers.host);
   _secure.path = "/";
 
   return {
