@@ -53,6 +53,25 @@ model Cliente {
   direccion String?
 }
 
+model Categorias{
+  id String @id @default(uuid())
+  nombre String
+  descripcion String
+
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
+
+model Proveedores{
+  id String @id @default(uuid())
+  nombre String
+  direccion String?
+  telefono String?
+  correo String?
+
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
 enum Role {
   admin
   vendedor

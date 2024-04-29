@@ -5,6 +5,8 @@ import ClienteR from "./routes/clienteR";
 import fs from "fs";
 import db from "./config/database";
 import archivos from "./helpers/Files";
+import ProveedorR from "./routes/proveedoresR";
+import CategoriaR from "./routes/categoriaR";
 
 const app = new Elysia({ prefix: "/sisventa" })
 
@@ -12,6 +14,8 @@ const app = new Elysia({ prefix: "/sisventa" })
   .use(AuhtR)
   .use(UserR)
   .use(ClienteR)
+  .use(ProveedorR)
+  .use(CategoriaR)
 
   /*.get("/img/:name", ({ params,set }) => {
     const path = "sisventa/uploads/img/profile/";
