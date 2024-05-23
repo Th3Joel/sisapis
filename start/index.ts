@@ -17,9 +17,7 @@ const app = new Elysia()
   )
 
   .use(sisventa)
-
-  
-  .listen(8080);
+  .listen(7000);
 
 console.log(
   `💀 server is running at ${app.server?.hostname}: ${app.server?.port} 📡`

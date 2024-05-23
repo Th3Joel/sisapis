@@ -15,7 +15,7 @@ interface AuthInput{
 const Auth = async(input:any) => {
     const {headers,store,db,cookie} = input;
     
-  const t:any = await verifyToken(cookie._secure.value,db,true);
+  const t:any = await verifyToken(headers.key,db,true);
   if(!t){
     return {
       status:false,

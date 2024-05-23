@@ -154,7 +154,7 @@ export const getProfile = async ({ db, store, params }: any) => {
   delete user.password;
   return {
     status: true,
-    find:user,
+    user,
   };
 };
 

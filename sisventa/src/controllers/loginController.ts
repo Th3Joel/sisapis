@@ -26,9 +26,9 @@ export const Login = async (input: LoginInput) => {
     cookie: { _secure },
   } = input;
 
-console.log("token: ",_secure.value);
+console.log("token: ",headers.key);
   const tokenRecord = await db.token.findFirst({
-    where: { token: _secure.value ?? "" },
+    where: { token: headers.key ?? "" },
   });
   if (tokenRecord) {
     return {
@@ -52,7 +52,7 @@ console.log("token: ",_secure.value);
 
   if (!user || !(await comparePasswd(body.password, user.password)))
     return {
-      status: "error",
+      status: false,
       msj: "Credenciales incorrectas",
     };
 
@@ -70,11 +70,11 @@ console.log("token: ",_secure.value);
 
   if (!tokenSaved) return "error";
 
-  _secure.value = token;
-  _secure.httpOnly = true;
-  _secure.domain = headers.host.split(":")[0];
-  console.log(headers.host);
-  _secure.path = "/";
+  // _secure.value = token;
+  // _secure.httpOnly = true;
+  // _secure.domain = headers.host.split(":")[0];
+  // console.log(headers.host);
+  // _secure.path = "/";
 
   return {
     status:true,
@@ -86,16 +86,16 @@ export const Logout = async ({ db, headers,cookie:{_secure} }: LoginInput) => {
   await db.token.deleteMany({
     where: {
       token: {
-        contains: _secure.value,
+        contains: headers.key,
       },
     },
   });
-  _secure.remove();
-  _secure.domain = headers.host.split(':')[0];
-  _secure.path = "/";
-  _secure.httpOnly = true;
+  // _secure.remove();
+  // _secure.domain = headers.host.split(':')[0];
+  // _secure.path = "/";
+  // _secure.httpOnly = true;
   return {
-    status: "true",
+    status: true,
     msj: "Session cerrada",
   };
 };
